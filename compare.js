@@ -5,7 +5,8 @@
    Shawn Mankotia, 2026
    ============================================================ */
 
-// ── DB field index constants ──────────────────────────────
+// DB field index constants. 
+// These make the code more readable and maintainable.
 const DB_TYPE  = 0;
 const DB_TITLE = 1;
 const DB_DIR   = 2;
@@ -16,16 +17,16 @@ const DB_GENRE = 6;
 const DB_CO    = 7;
 const DB_DESC  = 8;
 
-// ── Pre-filtered indexes ──────────────────────────────────
+// Pre-filtered indexes for searching.
 const tvIndex  = NETFLIX_DB.filter(r => r[DB_TYPE] === 'TV Show');
 const movIndex = NETFLIX_DB.filter(r => r[DB_TYPE] === 'Movie');
 
-// ── State ─────────────────────────────────────────────────
+// State variables to keep track of user selections and autocomplete state.
 let selectedShow  = null;
 let selectedMovie = null;
 let acActiveIdx   = { show: -1, movie: -1 };
 
-// ── Cohort totals (for trend context footer) ──────────────
+// ── Cohort totals (for trend context footer).
 // Source: counts derived from release_year + type in CSV
 const cohortMovies = {
   2010: 154, 2011: 145, 2012: 173, 2013: 225,
@@ -38,7 +39,8 @@ const cohortShows = {
   2018: 380, 2019: 397, 2020: 436, 2021: 315
 };
 
-// ── Search ────────────────────────────────────────────────
+// Search function.
+// This is a simple case-insensitive substring search on the title field, with results sorted by match position and limited to top 8.
 function fuzzySearch(arr, query, limit = 8) {
   if (!query || query.length < 1) return [];
   const q = query.toLowerCase();
@@ -63,7 +65,8 @@ function highlightMatch(title, query) {
   );
 }
 
-// ── Autocomplete rendering ────────────────────────────────
+// Autocomplete rendering. 
+// This updates the dropdown list under the input fields based on the search results. It also sets up event handlers for selection and hover.
 function renderList(listEl, results, type, inputEl) {
   if (!results.length) { listEl.classList.remove('open'); return; }
 
@@ -81,7 +84,8 @@ function renderList(listEl, results, type, inputEl) {
   acActiveIdx[type] = -1;
 }
 
-// ── Input handler ─────────────────────────────────────────
+// Input handler. 
+// This is called on every keystroke in the input fields. It updates the autocomplete list based on the current query.
 function handleInput(type) {
   const inputEl = document.getElementById(type === 'show' ? 'showInput'  : 'movieInput');
   const listEl  = document.getElementById(type === 'show' ? 'showList'   : 'movieList');
@@ -94,7 +98,8 @@ function handleInput(type) {
   renderList(listEl, fuzzySearch(arr, inputEl.value), type, inputEl);
 }
 
-// ── Keyboard navigation ───────────────────────────────────
+// Keyboard navigation handler. 
+// This allows users to navigate the autocomplete list using arrow keys, select with Enter, and close with Escape.
 function handleKey(e, type) {
   const listEl = document.getElementById(type === 'show' ? 'showList' : 'movieList');
   const items  = listEl.querySelectorAll('.ac-item');
@@ -120,7 +125,8 @@ function hoverItem(type, idx) {
   listEl.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('ac-selected', i === idx));
 }
 
-// ── Selection ─────────────────────────────────────────────
+// Selection handler. 
+// This is called when a user clicks on an autocomplete item or presses Enter. It updates the input field, stores the selected record, and updates the compare button state.
 function selectItem(e, type, idx) {
   if (e) e.preventDefault();
   const listEl  = document.getElementById(type === 'show' ? 'showList'  : 'movieList');
@@ -141,7 +147,7 @@ function updateCompareBtn() {
   document.getElementById('compareBtn').disabled = !(selectedShow && selectedMovie);
 }
 
-// Close dropdowns when clicking outside
+// Close dropdowns when clicking outside.
 document.addEventListener('click', e => {
   ['showList', 'movieList'].forEach(id => {
     const el = document.getElementById(id);
@@ -149,7 +155,8 @@ document.addEventListener('click', e => {
   });
 });
 
-// ── Result card renderer ──────────────────────────────────
+// Result card renderer. 
+// This takes a record and renders the information into the result card format, including badges, metadata, genres, and description.
 function renderCard(cardEl, record) {
   const genres   = record[DB_GENRE].split(',').map(g => g.trim()).filter(Boolean);
   const isShow   = record[DB_TYPE] === 'TV Show';
@@ -170,7 +177,7 @@ function renderCard(cardEl, record) {
     '<div class="result-desc">' + record[DB_DESC] + (record[DB_DESC].length >= 150 ? '…' : '') + '</div>';
 }
 
-// ── Trend context footer ──────────────────────────────────
+// Trend context footer.
 function renderTrendContext(show, movie) {
   const sy = parseInt(show[DB_YEAR]);
   const my = parseInt(movie[DB_YEAR]);
@@ -213,7 +220,7 @@ function renderTrendContext(show, movie) {
     '<div style="font-size:9px;color:#444;letter-spacing:1px;margin-left:auto">"Year" = release year in dataset</div>';
 }
 
-// ── Main compare trigger ──────────────────────────────────
+// Main compare trigger.
 function runCompare() {
   if (!selectedShow || !selectedMovie) return;
 

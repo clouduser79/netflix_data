@@ -3,7 +3,7 @@
    Shawn Mankotia, 2026
    ============================================================ */
 
-/* ── CSS Variables ───────────────────────────────────────── */
+/* CSS Variables */
 :root {
   --red:     #E50914;
   --gold:    #F5C518;
@@ -15,10 +15,10 @@
   --muted:   #888;
 }
 
-/* ── Reset ───────────────────────────────────────────────── */
+/* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ── Base ────────────────────────────────────────────────── */
+/* Base */
 body {
   background: var(--bg);
   color: var(--text);
@@ -43,7 +43,7 @@ body::before {
   z-index: 1000;
 }
 
-/* ── Header ──────────────────────────────────────────────── */
+/* Header */
 header {
   padding: 48px 48px 24px;
   border-bottom: 1px solid var(--border);
@@ -83,7 +83,8 @@ h1 span { color: var(--red); }
   white-space: nowrap;
 }
 
-/* ── KPI Strip ───────────────────────────────────────────── */
+/* KPI Strip */
+/* This is the horizontal strip at the top of the dashboard that displays key performance indicators (KPIs) such as total titles, average ratings, etc. */
 .kpi-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -135,14 +136,16 @@ h1 span { color: var(--red); }
   margin-top: 4px;
 }
 
-/* ── Main Grid ───────────────────────────────────────────── */
+/* Main Grid */
+/* The main layout of the dashboard is a two-column grid with the chart panel on the left and the insight cards on the right. */
 .main-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   min-height: calc(100vh - 280px);
 }
 
-/* ── Chart Panel ─────────────────────────────────────────── */
+/* Chart Panel */
+/* This is the main section on the left side of the dashboard where the charts are displayed. */
 .chart-panel {
   padding: 36px 48px;
   border-right: 1px solid var(--border);
@@ -193,7 +196,8 @@ h1 span { color: var(--red); }
   height: 340px;
 }
 
-/* ── Legend ──────────────────────────────────────────────── */
+/* Legend */
+/* A simple legend component to explain the colors and categories used in the charts. */
 .legend {
   display: flex;
   gap: 20px;
@@ -217,7 +221,8 @@ h1 span { color: var(--red); }
   flex-shrink: 0;
 }
 
-/* ── Side Panel / Insight Cards ──────────────────────────── */
+/* Side Panel / Insight Cards */
+/* This panel on the right side of the dashboard displays key insights and observations based on the data analysis. */
 .side-panel {
   padding: 36px 32px;
   display: flex;
@@ -263,7 +268,9 @@ h1 span { color: var(--red); }
 .insight-text strong.red  { color: var(--red); }
 .insight-text strong.gold { color: var(--gold); }
 
-/* ── Verdict Panel ───────────────────────────────────────── */
+/* Verdict Panel */
+/* This is the main section that presents the key insights and conclusions based on the data analysis.
+/* It includes a custom ratio bar visualization and a compare section for TV shows vs movies. */
 .verdict-panel {
   grid-column: 1 / -1;
   border-top: 1px solid var(--border);
@@ -302,7 +309,8 @@ h1 span { color: var(--red); }
 }
 .v-body b { color: var(--text); }
 
-/* ── Ratio Bar ───────────────────────────────────────────── */
+/* Ratio Bar */
+/* This is a custom horizontal bar visualization used in the verdict panel to show the ratio of TV shows to movies for selected years. */
 .ratio-bar-wrap {
   margin-top: 16px;
   display: flex;
@@ -352,7 +360,8 @@ h1 span { color: var(--red); }
   flex-shrink: 0;
 }
 
-/* ── Compare Section ─────────────────────────────────────── */
+/* Compare Section */
+/* This section allows users to compare a specific TV show and movie side by side. */
 .compare-section {
   border-top: 1px solid var(--border);
   padding: 40px 48px;
@@ -475,6 +484,8 @@ h1 span { color: var(--red); }
 .compare-btn:disabled { opacity: 0.35; cursor: default; }
 
 /* Compare Result Cards */
+/* These cards display the results of the comparison between a TV show and a movie.
+/* They are hidden by default and shown with a fade-in animation when the comparison is made. */
 .compare-result {
   display: none;
   grid-template-columns: 1fr 1fr;
@@ -555,6 +566,8 @@ h1 span { color: var(--red); }
 }
 
 /* Trend Context Footer */
+/* This section provides additional context and stats related to the trends. 
+/* Displayed as a horizontal strip below the main verdict panel. */
 .trend-context {
   grid-column: 1 / -1;
   background: #0d0d0d;
@@ -585,7 +598,7 @@ h1 span { color: var(--red); }
   letter-spacing: 1px;
 }
 
-/* ── Footer ──────────────────────────────────────────────── */
+/* Footer */
 .site-footer {
   text-align: center;
   padding: 20px;
@@ -595,7 +608,8 @@ h1 span { color: var(--red); }
   border-top: 1px solid var(--border);
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* Responsive */
+/* The layout adjusts for smaller screens by stacking elements vertically and simplifying the grid structures. */
 @media (max-width: 900px) {
   .kpi-strip      { grid-template-columns: repeat(2, 1fr); }
   .main-grid      { grid-template-columns: 1fr; }

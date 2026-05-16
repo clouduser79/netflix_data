@@ -3,12 +3,14 @@
    Shawn Mankotia, 2026
    ============================================================ */
 
-// ── Raw cohort data (derived from netflix_titles.csv) ─────
+// Raw cohort data (derived from netflix_titles.csv)
+// Used for both the line charts and the ratio bars in the verdict panel.
 const years  = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021];
 const movies = [154,  145,  173,  225,  264,  398,  658,  767,  767,  633,  517,  277];
 const shows  = [40,   40,   64,   63,   88,   162,  244,  265,  380,  397,  436,  315];
 
-// ── Linear regression helper ──────────────────────────────
+// Linear regression helper.
+// Literally the only time linear regression is useful in life.
 function linReg(xs, ys) {
   const n  = xs.length;
   const xm = xs.reduce((a, b) => a + b, 0) / n;
@@ -23,12 +25,16 @@ function linReg(xs, ys) {
 const mTrend = linReg(years, movies);
 const sTrend = linReg(years, shows);
 
-// Derived series
+// Derived series.
+// Growth rates are calculated as the percentage change from the previous year, with the first year set to 0% growth. 
+// Ratios are calculated as the number of TV shows per movie for each year.
 const growthM = movies.map((v, i) => i === 0 ? 0 : +((v - movies[i - 1]) / movies[i - 1] * 100).toFixed(1));
 const growthS = shows.map((v, i)  => i === 0 ? 0 : +((v - shows[i - 1])  / shows[i - 1]  * 100).toFixed(1));
 const ratios  = years.map((_, i)  => +(shows[i] / movies[i]).toFixed(2));
 
-// ── Chart config definitions ──────────────────────────────
+// Chart config definitions.
+// Each chart type has its own dataset configuration and y-axis label. 
+// They all share the same x-axis (years) and styling conventions for consistency.
 const chartConfigs = {
   volume: {
     datasets: [
@@ -98,7 +104,8 @@ const chartConfigs = {
   }
 };
 
-// ── Chart instance ────────────────────────────────────────
+// Chart instance management.
+// I kept a reference to the active Chart.js instance so we can destroy it before creating a new one when switching charts.
 let activeChart = null;
 
 function buildChart(type) {
@@ -147,7 +154,8 @@ function switchChart(type, btn) {
   buildChart(type);
 }
 
-// ── Ratio bars (verdict panel) ────────────────────────────
+// Ratio bars (verdict panel)
+// This is a custom implementation of horizontal bars to visualize the TV-to-movie ratio for selected years.
 const ratioSamples = [
   [2010, 154, 40],
   [2013, 225, 63],
@@ -175,6 +183,6 @@ function buildRatioBars() {
   });
 }
 
-// ── Init ──────────────────────────────────────────────────
+// Init the default chart and ratio bars on page load.
 buildChart('volume');
 buildRatioBars();
