@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Content Trends: TV Shows vs Movies</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════════ -->
+<header>
+  <div>
+    <div class="logo-n">NETFLIX · DATA ANALYSIS</div>
+    <h1>TV Shows vs <span>Movies</span><br>Trend Forecast</h1>
+  </div>
+  <div style="text-align:right">
+    <div class="verdict-badge">✓ TV SHOWS TRENDING HIGHER</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:1px">Dataset: 8,807 titles · 2000–2021</div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════
+     KPI STRIP
+════════════════════════════════════════════════════════════ -->
+<div class="kpi-strip">
+  <div class="kpi red">
+    <div class="kpi-label">TV Shows CAGR (2010–21)</div>
+    <div class="kpi-value red">20.6%</div>
+    <div class="kpi-sub">compound annual growth rate</div>
+  </div>
+  <div class="kpi teal">
+    <div class="kpi-label">Movies CAGR (2010–21)</div>
+    <div class="kpi-value teal">5.5%</div>
+    <div class="kpi-sub">compound annual growth rate</div>
+  </div>
+  <div class="kpi gold">
+    <div class="kpi-label">TV/Movie ratio shift</div>
+    <div class="kpi-value gold">0.26→1.14</div>
+    <div class="kpi-sub">from 2010 to 2021</div>
+  </div>
+  <div class="kpi white">
+    <div class="kpi-label">Crossover year</div>
+    <div class="kpi-value" style="color:#fff">2021</div>
+    <div class="kpi-sub">TV Shows first exceeded Movies</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN GRID  (chart panel + side panel + verdict)
+════════════════════════════════════════════════════════════ -->
+<div class="main-grid">
+
+  <!-- Chart Panel -->
+  <div class="chart-panel">
+    <div class="panel-title">Primary Model</div>
+    <div class="panel-subtitle">Annual Title Volume & Linear Trend</div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>Movies
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--teal)"></div>TV Shows
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(229,9,20,0.35);border:1px dashed var(--red)"></div>Movie Trend
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(0,180,216,0.35);border:1px dashed var(--teal)"></div>TV Trend
+        </div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchChart('volume',this)">Volume</button>
+        <button class="tab"        onclick="switchChart('ratio',this)">Ratio</button>
+        <button class="tab"        onclick="switchChart('growth',this)">Growth %</button>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="side-panel">
+    <div>
+      <div class="panel-title">Analysis</div>
+      <div class="panel-subtitle">Key Findings</div>
+    </div>
+
+    <div class="insight-card teal">
+      <div class="insight-tag">Finding 01 · Growth Divergence</div>
+      <div class="insight-text">
+        TV Show additions grew at a CAGR of <strong>20.6%</strong> vs Movies at just
+        <strong class="red">5.5%</strong> (2010–2021). TV growth is <strong>~4× faster</strong>.
+      </div>
+    </div>
+
+    <div class="insight-card red">
+      <div class="insight-tag">Finding 02 · Crossover Event</div>
+      <div class="insight-text">
+        Movies peaked at <strong class="red">767 titles</strong> in 2017, then declined sharply.
+        TV Shows peaked at <strong>436</strong> in 2020 and overtook Movies in <strong>2021</strong>.
+      </div>
+    </div>
+
+    <div class="insight-card gold">
+      <div class="insight-tag">Finding 03 · Ratio Compression</div>
+      <div class="insight-text">
+        In 2010, there were <strong class="gold">0.26</strong> TV Shows per Movie.
+        By 2021, that ratio had risen to <strong class="gold">1.14</strong> — a complete inversion in a decade.
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:16px">
+      <div class="insight-tag" style="margin-bottom:12px">Model · Linear Regression (2010–2021)</div>
+      <div style="font-size:11px;color:var(--muted);line-height:2">
+        <span style="color:var(--teal)">▲ TV Shows</span> slope: <b style="color:var(--text)">+38.9</b> titles/yr<br>
+        <span style="color:var(--red)">▼ Movies</span>   slope: <b style="color:var(--text)">+43.4</b> titles/yr<br>
+        <span style="color:var(--gold)">→</span> But Movie trajectory <b style="color:var(--text)">inverted</b> post-2017<br>
+        <span style="color:var(--gold)">→</span> TV trend remains <b style="color:var(--text)">upward</b> through 2021
+      </div>
+    </div>
+  </div>
+
+  <!-- Verdict Panel -->
+  <div class="verdict-panel">
+
+    <div class="verdict-section">
+      <div class="v-label">Model Answer</div>
+      <div class="v-title" style="color:var(--teal)">YES — TV Shows Trend Higher</div>
+      <div class="v-body">
+        TV Show additions grew <b>3.7× faster</b> than Movies over the 2010–2021 period.
+        With a CAGR of 20.6% vs 5.5%, and a ratio that flipped from 0.26 to 1.14,
+        the evidence is unambiguous.
+      </div>
+    </div>
+
+    <div class="verdict-section">
+      <div class="v-label">TV/Movie Ratio by Year</div>
+      <div class="v-title">Composition Shift</div>
+      <div class="ratio-bar-wrap" id="ratioBars"></div>
+      <div style="display:flex;gap:16px;margin-top:10px">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          <span style="font-size:9px">Movies</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--teal)"></div>
+          <span style="font-size:9px">TV Shows</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict-section">
+      <div class="v-label">Caveats & Limitations</div>
+      <div class="v-title">Model Assumptions</div>
+      <div class="v-body">
+        • Dataset ends 2021 — 2021 may be incomplete (only 592 titles vs 1,147 in 2020).<br><br>
+        • <b>Release year ≠ added to Netflix</b>; date_added data has many nulls.<br><br>
+        • Both categories declined sharply in 2021, possibly COVID production effects.<br><br>
+        • Long-term TV Show dominance is confirmed, but absolute volumes depend on
+          Netflix strategy shifts post-2021.
+      </div>
+    </div>
+
+  </div><!-- /verdict-panel -->
+</div><!-- /main-grid -->
+
+<!-- ══════════════════════════════════════════════════════════
+     COMPARE SECTION
+════════════════════════════════════════════════════════════ -->
+<div class="compare-section">
+
+  <div class="compare-header">
+    <div>
+      <div class="panel-title">Title Lookup</div>
+      <div class="panel-subtitle">Compare a TV Show &amp; Movie from the Dataset</div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);letter-spacing:1px">Search from 8,807 titles</div>
+  </div>
+
+  <div class="compare-inputs">
+
+    <!-- TV Show input -->
+    <div class="input-col">
+      <div class="input-label" style="color:var(--teal)">▶ TV Show Title</div>
+      <div class="search-wrap">
+        <input
+          id="showInput"
+          class="compare-input tv-focus"
+          placeholder="e.g. Stranger Things…"
+          autocomplete="off"
+          oninput="handleInput('show')"
+          onkeydown="handleKey(event,'show')"
+        >
+        <div id="showList" class="autocomplete-list"></div>
+      </div>
+    </div>
+
+    <!-- VS divider -->
+    <div class="vs-divider">
+      <div class="vs-circle">VS</div>
+    </div>
+
+    <!-- Movie input -->
+    <div class="input-col">
+      <div class="input-label" style="color:var(--red)">▶ Movie Title</div>
+      <div class="search-wrap">
+        <input
+          id="movieInput"
+          class="compare-input movie-focus"
+          placeholder="e.g. The Irishman…"
+          autocomplete="off"
+          oninput="handleInput('movie')"
+          onkeydown="handleKey(event,'movie')"
+        >
+        <div id="movieList" class="autocomplete-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /compare-inputs -->
+
+  <button class="compare-btn" id="compareBtn" onclick="runCompare()" disabled>
+    COMPARE TITLES
+  </button>
+
+  <div class="compare-result" id="compareResult">
+    <div class="result-card" id="showCard"></div>
+    <div class="result-card" id="movieCard"></div>
+    <div class="trend-context" id="trendContext"></div>
+  </div>
+
+</div><!-- /compare-section -->
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<div class="site-footer">By Shawn Mankotia</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS  (data first, then charts, then compare)
+════════════════════════════════════════════════════════════ -->
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script src="compare.js"></script>
+
+</body>
+</html>
